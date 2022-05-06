@@ -39,7 +39,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updateCustomer(Long customerId, String firstName, String lastName, String email, float fines) {
+    public void updateCustomer(Long customerId, String firstName, String lastName, String email, Float fines) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer does not exist"));
 
         if ( (firstName != null) && (firstName.length() > 0) ) {
@@ -55,6 +55,13 @@ public class CustomerService {
             }
             customer.setEmail(email);
         }
-        customer.setFines(fines);
+        if (fines != null) {
+            customer.setFines(fines);
+        }
+    }
+
+    public Customer getCustomer(Long costumerId) {
+        return customerRepository.findById(costumerId).orElseThrow(() ->
+                new IllegalStateException("requested customer does not exist"));
     }
 }

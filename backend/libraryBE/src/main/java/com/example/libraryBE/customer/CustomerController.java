@@ -22,6 +22,12 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
+    @GetMapping(path = "{costumerId}")
+    public Customer getCustomer(@PathVariable("costumerId") Long costumerId) {
+        System.out.println("soup: " + costumerId);
+        return customerService.getCustomer(costumerId);
+    }
+
     @PostMapping
     public void addCustomer(@RequestBody Customer customer) {
         customerService.addCustomer(customer);
@@ -37,7 +43,7 @@ public class CustomerController {
                                @RequestParam(required = false) String firstName,
                                @RequestParam(required = false) String lastName,
                                @RequestParam(required = false) String email,
-                               @RequestParam float fines) {
+                               @RequestParam(required = false) Float fines) {
         customerService.updateCustomer(customerId, firstName, lastName, email, fines);
     }
 

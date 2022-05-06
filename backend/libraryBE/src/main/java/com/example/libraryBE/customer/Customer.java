@@ -1,9 +1,13 @@
 package com.example.libraryBE.customer;
 
+import com.example.libraryBE.loan.Loan;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
 @Table
@@ -21,17 +25,23 @@ public class Customer {
     )
     private long id;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
+    private Collection<Loan> loans;
+
     private String firstName;
     private String lastName;
     private String email;
     private LocalDate birth;
     private float fines;
 
+
     public Customer() {
     }
 
-    public Customer(long id, String firstName, String lastName, String email, LocalDate birth, float fines) {
+    public Customer(long id, Collection<Loan> loans, String firstName, String lastName, String email, LocalDate birth, float fines) {
         this.id = id;
+        this.loans = loans;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -39,7 +49,8 @@ public class Customer {
         this.fines = fines;
     }
 
-    public Customer(String firstName, String lastName, String email, LocalDate birth, float fines) {
+    public Customer(Collection<Loan> loans, String firstName, String lastName, String email, LocalDate birth, float fines) {
+        this.loans = loans;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -93,6 +104,14 @@ public class Customer {
 
     public void setFines(float fines) {
         this.fines = fines;
+    }
+
+    public Collection<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(Collection<Loan> loans) {
+        this.loans = loans;
     }
 
     @Override
