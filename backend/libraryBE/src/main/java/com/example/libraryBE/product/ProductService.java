@@ -1,5 +1,9 @@
 package com.example.libraryBE.product;
 
+import com.example.libraryBE.author.Author;
+import com.example.libraryBE.author.AuthorRepository;
+import com.example.libraryBE.genre.Genre;
+import com.example.libraryBE.genre.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +16,16 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final GenreRepository genreRepository;
+    private final AuthorRepository authorRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+                          GenreRepository genreRepository,
+                          AuthorRepository authorRepository) {
         this.productRepository = productRepository;
+        this.genreRepository = genreRepository;
+        this.authorRepository = authorRepository;
     }
 
     public List<Product> getProducts() {
@@ -39,7 +49,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(String productIsbn, String title, String publisher, LocalDate publication, Integer copies) {
+    public void updateProduct(String productIsbn, String title, String publisher, LocalDate publication, Integer copies,
+                              Long[] addGenre, Long[] removeGenre, Long[] addAuthor, Long[] removeAuthor) {
         Product product = productRepository.findById(productIsbn).orElseThrow(() -> new IllegalStateException("product does not exist"));
 
         if ( (title != null) && (title.length() > 0) ) {
@@ -53,6 +64,46 @@ public class ProductService {
         }
         if ( (copies != null) && (copies > 0) ) {
             product.setCopies(copies);
+        }
+
+        if ( (addGenre != null) && (addGenre.length > 0) ) {
+            for (Long genreId : addGenre) {
+                Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new IllegalStateException("added genre does not exist"));
+                if (product.getGenres().contains(genre)) {
+                    throw new IllegalStateException("added genre aready assigned");
+                }
+                product.addGenre(genre);
+            }
+        }
+
+        if ( (removeGenre != null) && (removeGenre.length > 0) ) {
+            for (Long genreId : removeGenre) {
+                Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new IllegalStateException("removed genre does not exist"));
+                if (!product.getGenres().contains(genre)) {
+                    throw new IllegalStateException("removed genre not assigned");
+                }
+                product.removeGenre(genre);
+            }
+        }
+
+        if ( (addAuthor != null) && (addAuthor.length > 0) ) {
+            for (Long authorId : addAuthor) {
+                Author author = authorRepository.findById(authorId).orElseThrow(() -> new IllegalStateException("added author does not exist"));
+                if (product.getAuthors().contains(author)) {
+                    throw new IllegalStateException("added author aready assigned");
+                }
+                product.addAuthor(author);
+            }
+        }
+
+        if ( (removeAuthor != null) && (removeAuthor.length > 0) ) {
+            for (Long authorId : removeAuthor) {
+                Author author = authorRepository.findById(authorId).orElseThrow(() -> new IllegalStateException("removed author does not exist"));
+                if (!product.getAuthors().contains(author)) {
+                    throw new IllegalStateException("removed author not assigned");
+                }
+                product.removeAuthor(author);
+            }
         }
     }
 

@@ -123,12 +123,28 @@ public class Product {
         this.genres = genres;
     }
 
+    public void addGenre(Genre genre) {
+        this.genres.add(genre);
+    }
+
+    public void removeGenre(Genre genre) {
+        this.genres.remove(genre);
+    }
+
     public Collection<Author> getAuthors() {
         return authors;
     }
 
     public void setAuthors(Collection<Author> authors) {
         this.authors = authors;
+    }
+
+    public void addAuthor(Author author) {
+        this.authors.add(author);
+    }
+
+    public void removeAuthor(Author author) {
+        this.authors.remove(author);
     }
 
     @Override

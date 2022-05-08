@@ -1,7 +1,11 @@
 package com.example.libraryBE.genre;
 
+import com.example.libraryBE.product.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
 @Table
@@ -21,16 +25,22 @@ public class Genre {
 
     private String name;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "genres")
+    private Collection<Product> products;
+
     public Genre() {
     }
 
-    public Genre(String name) {
+    public Genre(String name, Collection<Product> products) {
         this.name = name;
+        this.products = products;
     }
 
-    public Genre(Long id, String name) {
+    public Genre(Long id, String name, Collection<Product> products) {
         this.id = id;
         this.name = name;
+        this.products = products;
     }
 
     public Long getId() {
@@ -47,6 +57,14 @@ public class Genre {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Collection<Product> products) {
+        this.products = products;
     }
 
     @Override

@@ -13,8 +13,8 @@ public class GenreConfig {
     @Bean
     CommandLineRunner commandLineRunnerGenre(GenreRepository repository) {
         return args -> {
-            Genre g1 = new Genre(1L, "Dystopie");
-            Genre g2 = new Genre(2L, "Horror");
+            Genre g1 = new Genre(1L, "Dystopie", null);
+            Genre g2 = new Genre(2L, "Horror", null);
 
             repository.saveAll(List.of(g1,g2));
         };

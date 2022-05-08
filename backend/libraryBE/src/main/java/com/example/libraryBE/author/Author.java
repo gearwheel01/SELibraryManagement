@@ -1,7 +1,11 @@
 package com.example.libraryBE.author;
 
+import com.example.libraryBE.product.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
 @Table
@@ -23,20 +27,26 @@ public class Author {
     private String lastName;
     private LocalDate birth;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "authors")
+    private Collection<Product> products;
+
     public Author() {
     }
 
-    public Author(String firstName, String lastName, LocalDate birth) {
+    public Author(String firstName, String lastName, LocalDate birth, Collection<Product> products) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birth = birth;
+        this.products = products;
     }
 
-    public Author(long id, String firstName, String lastName, LocalDate birth) {
+    public Author(long id, String firstName, String lastName, LocalDate birth, Collection<Product> products) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birth = birth;
+        this.products = products;
     }
 
     public long getId() {
@@ -69,6 +79,14 @@ public class Author {
 
     public void setBirth(LocalDate birth) {
         this.birth = birth;
+    }
+
+    public Collection<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Collection<Product> products) {
+        this.products = products;
     }
 
     @Override

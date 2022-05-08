@@ -13,8 +13,8 @@ public class AuthorConfig {
     @Bean
     CommandLineRunner commandLineRunnerAuthor(AuthorRepository repository) {
         return args -> {
-            Author a1 = new Author(1, "Lars", "Hudalla", LocalDate.now());
-            Author a2 = new Author(2, "Gear", "Wheel", LocalDate.now());
+            Author a1 = new Author(1, "Lars", "Hudalla", LocalDate.now(), null);
+            Author a2 = new Author(2, "Gear", "Wheel", LocalDate.now(), null);
 
             repository.saveAll(List.of(a1,a2));
         };

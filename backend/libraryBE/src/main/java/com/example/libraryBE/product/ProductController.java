@@ -42,8 +42,14 @@ public class ProductController {
                                @RequestParam(required = false) String title,
                                @RequestParam(required = false) String publisher,
                                @RequestParam(required = false) LocalDate publication,
-                               @RequestParam(required = false) Integer copies) {
-        productService.updateProduct(productIsbn, title, publisher, publication, copies);
+                               @RequestParam(required = false) Integer copies,
+
+                               @RequestParam(required = false) Long[] addGenre,
+                               @RequestParam(required = false) Long[] removeGenre,
+                               @RequestParam(required = false) Long[] addAuthor,
+                               @RequestParam(required = false) Long[] removeAuthor
+                              ) {
+        productService.updateProduct(productIsbn, title, publisher, publication, copies, addGenre, removeGenre, addAuthor, removeAuthor);
     }
 
 }
