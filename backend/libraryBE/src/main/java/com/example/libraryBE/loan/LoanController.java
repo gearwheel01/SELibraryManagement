@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -18,12 +19,13 @@ public class LoanController {
     }
 
     @GetMapping
-    public List<Loan> getLoans() {
-        return loanService.getLoans();
+    public List<LoanModel> getLoans(@RequestParam(required = false) Long customerId,
+                               @RequestParam(required = false) String productIsbn) {
+        return loanService.getLoans(customerId, productIsbn);
     }
 
     @GetMapping(path="{loanId}")
-    public Loan getLoan(@PathVariable("loanId") Long loanId) {
+    public LoanModel getLoan(@PathVariable("loanId") Long loanId) {
         return loanService.getLoan(loanId);
     }
 

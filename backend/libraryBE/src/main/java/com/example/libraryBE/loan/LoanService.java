@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LoanService {
@@ -28,8 +31,18 @@ public class LoanService {
         this.productRepository = productRepository;
     }
 
-    public List<Loan> getLoans() {
-        return loanRepository.findAll();
+    public List<LoanModel> getLoans(Long customerId, String productIsbn) {
+        List<Loan> loans = loanRepository.findAll();
+        if (customerId != null) {
+            loans = loans.stream().filter(l -> l.getCustomer().getId() == customerId).collect(Collectors.toList());
+        }
+        if (productIsbn != null) {
+            loans = loans.stream().filter(l -> l.getProduct().getIsbn().equals(productIsbn)).collect(Collectors.toList());
+        }
+
+        LinkedList<LoanModel> loanModels = new LinkedList<>();
+        loans.forEach(l -> loanModels.add(new LoanModel(l)));
+        return loanModels;
     }
 
     public void addLoan(Loan loan, Long customerId, String productIsbn) {
@@ -65,9 +78,10 @@ public class LoanService {
         }
     }
 
-    public Loan getLoan(Long loanId) {
-        return loanRepository.findById(loanId).orElseThrow(() ->
+    public LoanModel getLoan(Long loanId) {
+        Loan loan =  loanRepository.findById(loanId).orElseThrow(() ->
                 new IllegalStateException("requested loan does not exist"));
+        return new LoanModel(loan);
     }
 
     public boolean productHasCopyLeft() {
