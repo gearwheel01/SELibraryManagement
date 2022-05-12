@@ -4,13 +4,19 @@ import com.example.libraryBE.author.Author;
 import com.example.libraryBE.author.AuthorRepository;
 import com.example.libraryBE.genre.Genre;
 import com.example.libraryBE.genre.GenreRepository;
+import com.example.libraryBE.loan.Loan;
+import com.example.libraryBE.loan.LoanModel;
+import com.example.libraryBE.loan.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -18,18 +24,28 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
+    private final LoanRepository loanRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository,
                           GenreRepository genreRepository,
-                          AuthorRepository authorRepository) {
+                          AuthorRepository authorRepository,
+                          LoanRepository loanRepository) {
         this.productRepository = productRepository;
         this.genreRepository = genreRepository;
         this.authorRepository = authorRepository;
+        this.loanRepository = loanRepository;
     }
 
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<ProductModel> getProducts() {
+        List<Product> products = productRepository.findAll();
+        LinkedList<ProductModel> productModels = new LinkedList<>();
+        products.forEach(p -> {
+            ProductModel model = new ProductModel(p);
+            model.setRemainingCopies(getProductAvailableCopies(p.getIsbn()));
+            productModels.add(model);
+            });
+        return productModels;
     }
 
     public void addProduct(Product product) {
@@ -107,8 +123,20 @@ public class ProductService {
         }
     }
 
-    public Product getProduct(String productIsbn) {
-        return productRepository.findById(productIsbn).orElseThrow(() ->
+    public ProductModel getProduct(String productIsbn) {
+        Product product = productRepository.findById(productIsbn).orElseThrow(() ->
                 new IllegalStateException("requested product does not exist"));
+        ProductModel model = new ProductModel(product);
+        model.setRemainingCopies(getProductAvailableCopies(productIsbn));
+        return model;
+    }
+
+    public int getProductAvailableCopies(String productIsbn) {
+        Product product = productRepository.findById(productIsbn).orElseThrow(() -> new IllegalStateException("product does not exist"));
+        Collection<Loan> currentLoans = loanRepository.findAll();
+        currentLoans = currentLoans.stream().filter(l -> ( (l.getProduct().getIsbn().equals(product.getIsbn())) &&
+                                            (l.getReturned() == null) )).collect(Collectors.toList());
+
+        return product.getCopies() - currentLoans.size();
     }
 }

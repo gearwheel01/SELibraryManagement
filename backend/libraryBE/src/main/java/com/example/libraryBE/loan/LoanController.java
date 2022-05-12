@@ -1,6 +1,7 @@
 package com.example.libraryBE.loan;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -43,7 +44,8 @@ public class LoanController {
 
     @PutMapping(path="{loanId}")
     public void updateLoan(@PathVariable("loanId") Long loanId,
-                           @RequestParam(required = false) LocalDate returned) {
+                           @RequestParam(required = false)
+                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate returned) {
         loanService.updateLoan(loanId, returned);
     }
 

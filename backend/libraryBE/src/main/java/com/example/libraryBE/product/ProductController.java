@@ -18,13 +18,18 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getProducts() {
+    public List<ProductModel> getProducts() {
         return productService.getProducts();
     }
 
     @GetMapping(path="{productId}")
-    public Product getProduct(@PathVariable("productId") String productIsbn) {
+    public ProductModel getProduct(@PathVariable("productId") String productIsbn) {
         return productService.getProduct(productIsbn);
+    }
+
+    @GetMapping(path="{productId}/availableCopies")
+    public int getProductAvailableCopies(@PathVariable("productId") String productIsbn) {
+        return productService.getProductAvailableCopies(productIsbn);
     }
 
     @PostMapping
