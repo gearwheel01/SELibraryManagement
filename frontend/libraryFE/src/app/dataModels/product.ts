@@ -10,6 +10,6 @@ export interface Product {
   publication: Date;
   publisher: string;
   copies: number;
-  availableCopies?: number;
+  remainingCopies?: number;
 
 }

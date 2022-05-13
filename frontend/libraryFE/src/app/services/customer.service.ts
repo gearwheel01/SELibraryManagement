@@ -17,15 +17,15 @@ export class CustomerService {
     return this.http.get<Customer[]>(`${this.apiServerUrl}/customer`);
   }
 
-  addCustomers(customer: Customer): Observable<Customer> {
+  addCustomer(customer: Customer): Observable<Customer> {
     return this.http.post<Customer>(`${this.apiServerUrl}/customer`, customer);
   }
 
-  updateCustomers(customer: Customer): Observable<Customer> {
+  updateCustomer(customer: Customer): Observable<Customer> {
     return this.http.put<Customer>(`${this.apiServerUrl}/customer`, customer);
   }
 
-  deleteCustomers(customerId: number): Observable<void> {
+  deleteCustomer(customerId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/customer/${customerId}`);
   }
 }

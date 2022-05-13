@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+table {
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+label {
+  font-size: small;
+}
+
+.button_submit {
+  display: block;
+  margin-top: 50px;
+  background: #55ad1a;
+  border: none;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 32px;
+}
+
+.button_submit:disabled {
+  background: #dddddd;
+}
+
+mat-spinner {
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error {
+  color: red;
+}
+
+.button-add {
+  background: #d6b963;
+  margin: 10px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+}
+
+.button-loan {
+  display: block;
+  background: #55ad1a;
+  text-align: right;
+  border: none;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 32px;
+}
