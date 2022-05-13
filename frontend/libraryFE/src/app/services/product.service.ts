@@ -17,15 +17,15 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiServerUrl}/product`);
   }
 
-  addProducts(product: Product): Observable<Product> {
+  addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(`${this.apiServerUrl}/product`, product);
   }
 
-  updateProducts(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiServerUrl}/product`, product);
+  updateProduct(productIsbn: string, product: Product): Observable<Product> {
+    return this.http.put<Product>(`${this.apiServerUrl}/product/${productIsbn}`, product);
   }
 
-  deleteProducts(productId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/product/${productId}`);
+  deleteProduct(productIsbn: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/product/${productIsbn}`);
   }
 }
