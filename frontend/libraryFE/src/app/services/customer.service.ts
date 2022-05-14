@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Customer } from '../dataModels/customer'
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -23,6 +23,12 @@ export class CustomerService {
 
   updateCustomer(customer: Customer): Observable<Customer> {
     return this.http.put<Customer>(`${this.apiServerUrl}/customer`, customer);
+  }
+
+  updateCustomerFines(customer: Customer): Observable<Customer> {
+    let p = new HttpParams();
+    p = p.append("fines", customer.fines!);
+    return this.http.put<Customer>(`${this.apiServerUrl}/customer/${customer.id!}`, {}, {params: p});
   }
 
   deleteCustomer(customerId: number): Observable<void> {
