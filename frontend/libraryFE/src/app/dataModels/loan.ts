@@ -1,8 +1,8 @@
 export interface Loan {
 
-  id: number;
+  id?: number;
   received: Date;
-  returned: Date;
+  returned?: Date;
   customerId: number;
   productIsbn: string;
 

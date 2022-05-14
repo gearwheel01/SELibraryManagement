@@ -4,8 +4,9 @@ import { Product } from '../dataModels/product';
 import { Loan } from '../dataModels/loan';
 import { Customer } from '../dataModels/customer';
 import { CustomerService } from '../services/customer.service';
+import { LoanService } from '../services/loan.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-receive-loan',
@@ -15,12 +16,16 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 export class ReceiveLoanComponent implements OnInit {
 
   public loading: boolean = false;
+  public failed: boolean = false;
+  public pendingRequests: number = 0;
   public customers: Customer[] = [];
   customerForm: FormGroup;
   @Input() selectedProducts: Product[];
   filteredOptionsCustomer: Customer[];
 
-  constructor(private customerService: CustomerService,
+  constructor(public dialog: MatDialogRef<ReceiveLoanComponent>,
+              private customerService: CustomerService,
+              private loanService: LoanService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.customerForm = new FormGroup({
       customerFirstName: new FormControl('', Validators.required),
@@ -35,10 +40,39 @@ export class ReceiveLoanComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public addLoan(): void {
+  closeDialog(): void {
+    this.dialog.close();
   }
 
+  public addLoan(): void {
+    let customer: Customer = this.getCustomerFromInput();
+    this.pendingRequests = this.selectedProducts.length;
+    this.selectedProducts.forEach(product => {
+      let loan: Loan = {
+        received: new Date(),
+        customerId: customer.id!,
+        productIsbn: product.isbn!
+      }
+      console.log(loan);
+      this.addLoanInDb(loan);
+    });
+  }
 
+  public addLoanInDb(l: Loan): void {
+    this.loanService.addLoan(l).subscribe(
+      (response: any) => {
+        console.log(`${response} added loan`);
+        this.pendingRequests -= 1;
+        if (this.pendingRequests <= 0) {
+          this.closeDialog();
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.failed = true;
+      }
+     );
+  }
 
 
   public canCreate(): boolean {

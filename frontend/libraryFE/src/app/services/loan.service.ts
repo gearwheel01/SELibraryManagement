@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Loan } from '../dataModels/loan'
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -17,15 +17,19 @@ export class LoanService {
     return this.http.get<Loan[]>(`${this.apiServerUrl}/loan`);
   }
 
-  addLoans(loan: Loan): Observable<Loan> {
-    return this.http.post<Loan>(`${this.apiServerUrl}/loan`, loan);
+  addLoan(loan: Loan): Observable<Loan> {
+    let p = new HttpParams();
+    p = p.append("productIsbn", loan.productIsbn);
+    p = p.append("customerId", loan.customerId);
+
+    return this.http.post<Loan>(`${this.apiServerUrl}/loan`, {received: loan.received}, {params: p});
   }
 
-  updateLoans(loan: Loan): Observable<Loan> {
+  updateLoan(loan: Loan): Observable<Loan> {
     return this.http.put<Loan>(`${this.apiServerUrl}/loan`, loan);
   }
 
-  deleteLoans(loanId: number): Observable<void> {
+  deleteLoan(loanId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/loan/${loanId}`);
   }
 }
