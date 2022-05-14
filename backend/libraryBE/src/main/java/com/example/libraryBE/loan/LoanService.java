@@ -4,6 +4,7 @@ import com.example.libraryBE.customer.Customer;
 import com.example.libraryBE.customer.CustomerRepository;
 import com.example.libraryBE.product.Product;
 import com.example.libraryBE.product.ProductRepository;
+import com.example.libraryBE.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,17 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Autowired
     public LoanService(LoanRepository loanRepository,
                        CustomerRepository customerRepository,
-                       ProductRepository productRepository) {
+                       ProductRepository productRepository,
+                       ProductService productService) {
         this.loanRepository = loanRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     public List<LoanModel> getLoans(Long customerId, String productIsbn) {
@@ -51,7 +55,7 @@ public class LoanService {
         Product product = productRepository.findById(productIsbn).orElseThrow(
                 () -> new IllegalStateException("assigned product does not exist"));
 
-        if (!productHasCopyLeft()) {
+        if (productService.getProductAvailableCopies(productIsbn) <= 0) {
             throw new IllegalStateException("no more copies of product left");
         }
 
@@ -82,10 +86,6 @@ public class LoanService {
         Loan loan =  loanRepository.findById(loanId).orElseThrow(() ->
                 new IllegalStateException("requested loan does not exist"));
         return new LoanModel(loan);
-    }
-
-    public boolean productHasCopyLeft() {
-        return true;
     }
 
 }

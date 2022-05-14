@@ -61,7 +61,12 @@
         </ng-container>
         <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef> Leihen </th>
-          <td mat-cell *matCellDef="let element"> + </td>
+          <td mat-cell *matCellDef="let element">
+            <div *ngIf="element.remainingCopies > 0">
+              <button type="button" *ngIf="!productIsSelected(element)" (click)="selectProduct(element)" class="button-loan-addproduct">Hinzufügen</button>
+              <button type="button" *ngIf="productIsSelected(element)" (click)="unselectProduct(element)" class="button-loan-removeproduct">Entfernen</button>
+            </div>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -73,7 +78,7 @@
   </div>
   <div class="receiveLoan">
     <p>
-      <button type="button" class="button-loan">Ausgewählte Elemente leihen</button>
+      <button type="button" class="button button-loan" (click)="openAddLoanView()" [disabled]="selectedProducts.length <= 0">Ausgewählte Elemente leihen</button>
     </p>
   </div>
 

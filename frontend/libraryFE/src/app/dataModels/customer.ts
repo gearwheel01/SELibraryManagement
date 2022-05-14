@@ -4,7 +4,7 @@ export interface Customer {
   firstName: string;
   lastName: string;
   email: string;
-  birth: Date;
-  fines: number;
+  birth?: Date;
+  fines?: number;
 
 }

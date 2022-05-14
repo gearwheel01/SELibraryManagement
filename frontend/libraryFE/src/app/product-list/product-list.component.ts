@@ -4,9 +4,11 @@ import { Author } from '../dataModels/author';
 import { Genre } from '../dataModels/genre';
 import { AddCustomerComponent } from '../add-customer/add-customer.component';
 import { AddProductComponent } from '../add-product/add-product.component';
+import { ReceiveLoanComponent } from '../receive-loan/receive-loan.component';
 import { ProductService } from '../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -18,11 +20,13 @@ export class ProductListComponent implements OnInit {
 
   public products: Product[] = [];
   public displayedColumns: string[] = ['isbn', 'title', 'authors', 'genres', 'publication', 'publisher', 'copies', 'available', 'add'];
+  public selectedProducts: Product[] = [];
 
   constructor(private productService: ProductService,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
+
     this.getProducts();
   }
 
@@ -43,7 +47,20 @@ export class ProductListComponent implements OnInit {
      width: '500px',
    }).afterClosed().subscribe(() => {
        this.getProducts();
-       console.log("souped");
+   });
+  }
+
+  public openAddLoanView(): void {
+  console.log("soup");
+   this.dialog.open(ReceiveLoanComponent, {
+     height: '50%',
+     width: '500px',
+     data: {
+      selectedProducts: this.selectedProducts
+     }
+   }).afterClosed().subscribe(() => {
+       this.getProducts();
+       this.selectedProducts = [];
    });
   }
 
@@ -71,4 +88,22 @@ export class ProductListComponent implements OnInit {
        );
     }
 
+    public addLoan(): void {
+    }
+
+    public canCreate(): boolean {
+      return true;
+    }
+
+    public selectProduct(product: Product): void {
+      this.selectedProducts.push(product);
+    }
+
+    public unselectProduct(product: Product): void {
+      this.selectedProducts = this.selectedProducts.filter(p => p != product);
+    }
+
+    public productIsSelected(product: Product): boolean {
+      return this.selectedProducts.includes(product);
+    }
 }

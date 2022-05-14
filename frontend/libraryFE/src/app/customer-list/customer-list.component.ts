@@ -63,41 +63,17 @@ export class CustomerListComponent implements OnInit{
        );
     }
 
-    public getAuthors(): void {
-      this.authorService.getAuthors().subscribe(
-        (response: Author[]) => {
-          this.authors = response;
-          console.log(this.authors);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-       );
-    }
-
-    public getLoans(): void {
-      this.loanService.getLoans().subscribe(
-        (response: Loan[]) => {
-          this.loans = response;
-          console.log(this.loans);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-       );
-    }
-
     public getGenres(): void {
-      this.genreService.getGenres().subscribe(
-        (response: Genre[]) => {
-          this.genres = response;
-          console.log(this.genres);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-       );
-    }
+           this.genreService.getGenres().subscribe(
+             (response: Genre[]) => {
+               this.genres = response;
+               console.log(this.genres);
+             },
+             (error: HttpErrorResponse) => {
+               alert(error.message);
+             }
+            );
+         }
 
     public getLoanSpecs(): void {
       this.loanSpecsService.getLoanSpecs().subscribe(
