@@ -1,1 +1,34 @@
-<p>return-loan works!</p>
+<div>
+  <form [formGroup]="customerForm" (ngSubmit)="this.updateLoans()" autocomplete="off">
+    <div class="inputContainer">
+      <p>
+        Produkte zurückgeben
+      <div *ngFor="let product of selectedProducts">
+        - {{product.isbn}} - {{product.title}}
+      </div>
+
+      <p>
+        Kundeninformationen<br>
+        <label for="customerFirstName">Vorname</label><br>
+        <input type="text" id="customerFirstName" formControlName="customerFirstName" [matAutocomplete]="autoCustomer" (ngModelChange)="updateFilteredCustomers()"/>
+      </p>
+      <p>
+        <label for="customerLastName">Nachname</label><br>
+        <input type="text" id="customerLastName" formControlName="customerLastName" [matAutocomplete]="autoCustomer" (ngModelChange)="updateFilteredCustomers()"/>
+      </p>
+      <p>
+        <label for="customerEmail">E-Mail</label><br>
+        <input type="text" id="customerEmail" formControlName="customerEmail" [matAutocomplete]="autoCustomer" (ngModelChange)="updateFilteredCustomers()"/>
+      </p>
+      <mat-autocomplete #autoCustomer="matAutocomplete" (optionSelected)="setCustomerData($event.option.value)">
+        <mat-option *ngFor="let customer of filteredOptionsCustomer" [value]="customer">
+          <div>
+            <span>{{customer.firstName}} {{customer.lastName}} ({{customer.email}})</span>
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+      <input type="submit" id="addLoan" class="button button_submit" value="Zurückgeben" [disabled]="!canCreate()"/>
+      <mat-spinner *ngIf="loading"></mat-spinner>
+    </div>
+  </form>
+</div>

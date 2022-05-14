@@ -13,8 +13,12 @@ export class LoanService {
 
   constructor(private http: HttpClient) { }
 
-  getLoans(): Observable<Loan[]> {
-    return this.http.get<Loan[]>(`${this.apiServerUrl}/loan`);
+  getOpenLoans(productIsbn?: string): Observable<Loan[]> {
+    let p = new HttpParams();
+    if (productIsbn != null) {
+      p = p.append("productIsbn", productIsbn);
+    }
+    return this.http.get<Loan[]>(`${this.apiServerUrl}/loan/open`, {params: p});
   }
 
   addLoan(loan: Loan): Observable<Loan> {
@@ -26,7 +30,10 @@ export class LoanService {
   }
 
   updateLoan(loan: Loan): Observable<Loan> {
-    return this.http.put<Loan>(`${this.apiServerUrl}/loan`, loan);
+    let p = new HttpParams();
+    p = p.append("returned", loan.returned!.toISOString().substring(0, 10));
+    console.log(p);
+    return this.http.put<Loan>(`${this.apiServerUrl}/loan/${loan.id}`, {}, {params: p});
   }
 
   deleteLoan(loanId: number): Observable<void> {

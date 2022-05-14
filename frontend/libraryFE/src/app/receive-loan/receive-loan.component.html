@@ -2,9 +2,9 @@
   <form [formGroup]="customerForm" (ngSubmit)="this.addLoan()" autocomplete="off">
     <div class="inputContainer">
       <p>
-        Produkte
+        Produkte leihen
         <div *ngFor="let product of selectedProducts">
-          {{product.isbn}} - {{product.title}}
+          - {{product.isbn}} - {{product.title}}
         </div>
 
       <p>

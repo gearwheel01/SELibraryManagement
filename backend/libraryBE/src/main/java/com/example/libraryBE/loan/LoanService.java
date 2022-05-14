@@ -49,6 +49,21 @@ public class LoanService {
         return loanModels;
     }
 
+    public List<LoanModel> getOpenLoans(Long customerId, String productIsbn) {
+        List<Loan> loans = loanRepository.findAll();
+        loans = loans.stream().filter(l -> l.getReturned() == null).collect(Collectors.toList());
+        if (customerId != null) {
+            loans = loans.stream().filter(l -> l.getCustomer().getId() == customerId).collect(Collectors.toList());
+        }
+        if (productIsbn != null) {
+            loans = loans.stream().filter(l -> l.getProduct().getIsbn().equals(productIsbn)).collect(Collectors.toList());
+        }
+
+        LinkedList<LoanModel> loanModels = new LinkedList<>();
+        loans.forEach(l -> loanModels.add(new LoanModel(l)));
+        return loanModels;
+    }
+
     public void addLoan(Loan loan, Long customerId, String productIsbn) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(
                 () -> new IllegalStateException("assigned customer does not exist"));

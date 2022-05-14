@@ -19,10 +19,17 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    @GetMapping
+    @GetMapping()
     public List<LoanModel> getLoans(@RequestParam(required = false) Long customerId,
-                               @RequestParam(required = false) String productIsbn) {
+                                        @RequestParam(required = false) String productIsbn) {
         return loanService.getLoans(customerId, productIsbn);
+    }
+
+
+    @GetMapping(path="open")
+    public List<LoanModel> getOpenLoans(@RequestParam(required = false) Long customerId,
+                               @RequestParam(required = false) String productIsbn) {
+        return loanService.getOpenLoans(customerId, productIsbn);
     }
 
     @GetMapping(path="{loanId}")

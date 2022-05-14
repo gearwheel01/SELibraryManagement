@@ -20,7 +20,7 @@ export class ReceiveLoanComponent implements OnInit {
   public pendingRequests: number = 0;
   public customers: Customer[] = [];
   customerForm: FormGroup;
-  @Input() selectedProducts: Product[];
+  selectedProducts: Product[];
   filteredOptionsCustomer: Customer[];
 
   constructor(public dialog: MatDialogRef<ReceiveLoanComponent>,
@@ -47,6 +47,7 @@ export class ReceiveLoanComponent implements OnInit {
   public addLoan(): void {
     let customer: Customer = this.getCustomerFromInput();
     this.pendingRequests = this.selectedProducts.length;
+    this.loading = true;
     this.selectedProducts.forEach(product => {
       let loan: Loan = {
         received: new Date(),
@@ -77,7 +78,6 @@ export class ReceiveLoanComponent implements OnInit {
 
   public canCreate(): boolean {
     let c: Customer = this.getCustomerFromInput();
-    console.log(c.id);
     return c.id != null;
   }
 
@@ -97,7 +97,6 @@ export class ReceiveLoanComponent implements OnInit {
           c.id = customer.id;
           c.birth = customer.birth;
           c.fines = customer.fines;
-          console.log(c);
        }
     });
 

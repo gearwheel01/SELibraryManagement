@@ -5,6 +5,7 @@ import { Genre } from '../dataModels/genre';
 import { AddCustomerComponent } from '../add-customer/add-customer.component';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { ReceiveLoanComponent } from '../receive-loan/receive-loan.component';
+import { ReturnLoanComponent } from '../return-loan/return-loan.component';
 import { ProductService } from '../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,7 +42,6 @@ export class ProductListComponent implements OnInit {
   }
 
   public openAddCustomerView(): void {
-  console.log("soup");
    this.dialog.open(AddCustomerComponent, {
      height: '50%',
      width: '500px',
@@ -51,8 +51,20 @@ export class ProductListComponent implements OnInit {
   }
 
   public openAddLoanView(): void {
-  console.log("soup");
    this.dialog.open(ReceiveLoanComponent, {
+     height: '50%',
+     width: '500px',
+     data: {
+      selectedProducts: this.selectedProducts
+     }
+   }).afterClosed().subscribe(() => {
+       this.getProducts();
+       this.selectedProducts = [];
+   });
+  }
+
+  public openReturnLoanView(): void {
+   this.dialog.open(ReturnLoanComponent, {
      height: '50%',
      width: '500px',
      data: {
@@ -88,11 +100,12 @@ export class ProductListComponent implements OnInit {
        );
     }
 
-    public addLoan(): void {
+    public canReceiveLoan(): boolean {
+      return ( (this.selectedProducts.length > 0) && ((this.selectedProducts.find(p => p.remainingCopies! <= 0)) == null) );
     }
 
-    public canCreate(): boolean {
-      return true;
+    public canReturnLoan(): boolean {
+      return ( (this.selectedProducts.length > 0) && ((this.selectedProducts.find(p => p.remainingCopies! == p.copies)) == null) );
     }
 
     public selectProduct(product: Product): void {
