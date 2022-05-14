@@ -19,8 +19,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductModel> getProducts() {
-        return productService.getProducts();
+    public List<ProductModel> getProducts(@RequestParam(required = false) String searchTerm) {
+        return productService.getProducts(searchTerm);
     }
 
     @GetMapping(path="{productId}")

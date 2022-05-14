@@ -22,13 +22,18 @@ export class ProductListComponent implements OnInit {
   public products: Product[] = [];
   public displayedColumns: string[] = ['isbn', 'title', 'authors', 'genres', 'publication', 'publisher', 'copies', 'available', 'add'];
   public selectedProducts: Product[] = [];
+  productSearchForm: FormGroup;
 
   constructor(private productService: ProductService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog) {
+      this.productSearchForm = new FormGroup({
+        searchString: new FormControl('', Validators.required)
+      });
+   }
 
   ngOnInit(): void {
 
-    this.getProducts();
+    this.getProducts("");
   }
 
 
@@ -37,7 +42,7 @@ export class ProductListComponent implements OnInit {
       height: '80%',
       width: '50%',
     }).afterClosed().subscribe(() => {
-        this.getProducts();
+        this.getProducts("");
     });
   }
 
@@ -46,7 +51,7 @@ export class ProductListComponent implements OnInit {
      height: '50%',
      width: '500px',
    }).afterClosed().subscribe(() => {
-       this.getProducts();
+       this.getProducts("");
    });
   }
 
@@ -58,7 +63,7 @@ export class ProductListComponent implements OnInit {
       selectedProducts: this.selectedProducts
      }
    }).afterClosed().subscribe(() => {
-       this.getProducts();
+       this.getProducts("");
        this.selectedProducts = [];
    });
   }
@@ -71,13 +76,17 @@ export class ProductListComponent implements OnInit {
       selectedProducts: this.selectedProducts
      }
    }).afterClosed().subscribe(() => {
-       this.getProducts();
+       this.getProducts("");
        this.selectedProducts = [];
    });
   }
 
-  public getProducts(): void {
-    this.productService.getProducts().subscribe(
+  public searchProducts(): void {
+    this.getProducts(this.productSearchForm.get("searchString")!.value);
+  }
+
+  public getProducts(searchString: string): void {
+    this.productService.getProductsSearch(searchString).subscribe(
       (response: Product[]) => {
         this.products = response;
         console.log(this.products);
@@ -91,7 +100,7 @@ export class ProductListComponent implements OnInit {
     public deleteProduct(productIsbn: string): void {
       this.productService.deleteProduct(productIsbn).subscribe(
         (response: any) => {
-          this.getProducts();
+          this.getProducts("");
           console.log(`${response} deleted product`);
         },
         (error: HttpErrorResponse) => {

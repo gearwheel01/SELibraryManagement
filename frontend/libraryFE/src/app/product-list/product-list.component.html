@@ -7,8 +7,10 @@
   </div>
 
   <div class="product-search">
-      Suche: <input type = "text"/>
-      <button type="button">Filter</button>
+    <form [formGroup]="productSearchForm" (ngSubmit)="this.searchProducts()">
+      Suche: <input type = "text" id="searchString" formControlName="searchString"/>
+      <input type="submit" id="search" value="Suchen"/>
+    </form>
   </div>
 
   <div class="product-table">

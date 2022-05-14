@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +34,19 @@ public class ProductService {
         this.loanRepository = loanRepository;
     }
 
-    public List<ProductModel> getProducts() {
+    public List<ProductModel> getProducts(String searchTerm) {
         List<Product> products = productRepository.findAll();
+        if (searchTerm != null) {
+            String finalSearchTerm = searchTerm.toLowerCase(Locale.ROOT);
+            products = products.stream().filter(p ->
+                (
+                        (p.getTitle().toLowerCase(Locale.ROOT).contains(finalSearchTerm)) ||
+                        (p.getIsbn().toLowerCase(Locale.ROOT).contains(finalSearchTerm)) ||
+                        (p.getPublisher().toLowerCase(Locale.ROOT).contains(finalSearchTerm))
+                        )
+            ).collect(Collectors.toList());
+        }
+
         LinkedList<ProductModel> productModels = new LinkedList<>();
         products.forEach(p -> {
             ProductModel model = new ProductModel(p);

@@ -17,6 +17,14 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiServerUrl}/product`);
   }
 
+  getProductsSearch(searchString: string): Observable<Product[]> {
+    let p = new HttpParams();
+    if (searchString.length > 0) {
+      p = p.append("searchTerm", searchString);
+    }
+    return this.http.get<Product[]>(`${this.apiServerUrl}/product`, {params: p});
+  }
+
   addProduct(product: Product, addGenreIds: number[], addGenreNames: string[],
               addAuthorIds: number[],
               addAuthorFirstNames: string[], addAuthorLastNames: string[], addAuthorBirths: Date[]): Observable<Product> {
