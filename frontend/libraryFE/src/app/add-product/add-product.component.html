@@ -1,1 +1,70 @@
-<p>add-product works!</p>
+<div>
+  <form [formGroup]="productForm" (ngSubmit)="this.addProduct()" autocomplete="off">
+    <div class="inputContainer">
+      <p>
+        <label for="isbn">ISBN</label><br>
+        <input type="text" id="isbn" formControlName="isbn"/>
+      </p>
+      <p>
+        <label for="title">Titel</label><br>
+        <input type="text" id="title" formControlName="title"/>
+      </p>
+      <p>
+        <label for="authorFirstName">Autor (Vorname, Nachname, Geburt)</label><br>
+        <input type="text" id="authorFirstName" formControlName="authorFirstName" [matAutocomplete]="autoAuthor" (ngModelChange)="updateFilteredAuthors()"/>
+        <input type="text" id="authorLastName" formControlName="authorLastName" [matAutocomplete]="autoAuthor" (ngModelChange)="updateFilteredAuthors()"/>
+        <input type="date" id="authorBirth" formControlName="authorBirth"/>
+        <mat-autocomplete #autoAuthor="matAutocomplete" (optionSelected)="setAuthorData($event.option.value)">
+          <mat-option *ngFor="let author of filteredOptionsAuthor" [value]="author">
+            <div>
+              <span>{{author.firstName}} {{author.lastName}}</span>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+
+        <button type="button" class="button button-form-add" (click)="addAuthor() "[disabled]="!canAddAuthor()">+</button><br>
+
+        <span *ngFor="let author of addedAuthors">
+          <span class="authorShell" [style]="{'background': 'red', 'color': 'white'}">
+            {{author.firstName}} {{author.lastName}}
+          </span>
+          <button type="button" class="authorDelete" (click)="removeAuthor(author)"><b>X</b></button>
+        </span>
+      </p>
+      <p>
+        <label for="publisher">Herausgeber</label><br>
+        <input type="text" id="publisher" formControlName="publisher"/>
+      </p>
+      <p>
+        <label for="publication">Veröffentlichung</label><br>
+        <input type="Date" id="publication" formControlName="publication"/>
+      </p>
+      <p>
+        <label for="genre">Genre</label><br>
+        <input matInput type="text" id="genre" formControlName="genre" [matAutocomplete]="autoGenre"/>
+        <button type="button" class="button button-form-add" (click)="addGenre()" [disabled]="!canAddGenre()">+</button><br>
+        <mat-autocomplete #autoGenre="matAutocomplete">
+          <mat-option *ngFor="let genre of filteredOptionsGenre | async" [value]="genre">
+              <span>{{genre}}</span>
+          </mat-option>
+        </mat-autocomplete>
+        <span *ngFor="let genre of addedGenres">
+          <span class="genreShell" [style]="{'background': 'red', 'color': 'white'}">
+            {{genre.name}}
+          </span>
+          <button type="button" class="genreDelete" (click)="removeGenre(genre)"><b>X</b></button>
+        </span>
+      </p>
+      <p>
+        <label for="copies">Anzahl Exemplare</label><br>
+        <input type="number" id="copies" formControlName="copies"/>
+      </p>
+    </div>
+    <div class="error" *ngIf="failed">Hinzufügen fehlgeschlagen</div>
+
+    <div class="horizCenter bottomSpace">
+      <input type="submit" id="addCustomer" class="button button_submit" value="Kunde hinzufügen" [disabled]="!canCreate()"/>
+      <mat-spinner *ngIf="loading"></mat-spinner>
+    </div>
+  </form>
+</div>

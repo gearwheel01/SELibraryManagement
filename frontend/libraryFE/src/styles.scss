@@ -3,6 +3,11 @@ table {
   width: 100%;
 }
 
+.table-container {
+  max-height: 500px;
+  overflow: auto;
+}
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -10,6 +15,10 @@ body {
 
 label {
   font-size: small;
+}
+
+input {
+  margin: 5px;
 }
 
 .button_submit {
@@ -21,10 +30,6 @@ label {
   margin-left: auto;
   margin-right: auto;
   padding: 15px 32px;
-}
-
-.button_submit:disabled {
-  background: #dddddd;
 }
 
 mat-spinner {
@@ -45,6 +50,22 @@ mat-spinner {
   padding: 15px 32px;
 }
 
+.button-return {
+  background: #55ad1a;
+  margin: 10px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+}
+
+.button-form-add {
+  background: brown;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+}
+
+
 .button-loan {
   display: block;
   background: #55ad1a;
@@ -54,4 +75,19 @@ mat-spinner {
   margin-left: auto;
   margin-right: auto;
   padding: 15px 32px;
+}
+
+.product-search {
+	display: block;
+	margin: auto;
+	width: 20%;
+}
+
+.title {
+  font-size: 32px;
+  text-align: center;
+}
+
+.button:disabled {
+  background: #dddddd;
 }

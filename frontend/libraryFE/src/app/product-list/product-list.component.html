@@ -1,83 +1,79 @@
 <div>
-  <p>Produktliste</p>
-  <div class="addData">
+  <div class="add-data">
     <p>
       <button type="button" class="button-add" (click)="openAddProductView()">Neues Produkt</button>
       <button type="button" class="button-add" (click)="openAddCustomerView()">Neuer Kunde</button>
+      <button type="button" class="button-return">Produkt zurückgeben</button>
     </p>
   </div>
-  <div returnLoan>
-    <p>
-      <button type="button">Produkt zurückgeben</button>
-    </p>
-  </div>
-  <div class="productSearch">
-    <p>
+
+  <div class="product-search">
       Suche: <input type = "text"/>
       <button type="button">Filter</button>
-    </p>
   </div>
-  <div class="productTable">
 
-    <table mat-table [dataSource]="products" class="mat-elevation-z8">
+  <div class="product-table">
+    <div class="table-container">
+      <table mat-table [dataSource]="products" class="mat-elevation-z8">
 
-      <ng-container matColumnDef="isbn">
-        <th mat-header-cell *matHeaderCellDef> ISBN </th>
-        <td mat-cell *matCellDef="let element"> {{element.isbn}} </td>
-      </ng-container>
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef> Titel </th>
-        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-      </ng-container>
-      <ng-container matColumnDef="authors">
-        <th mat-header-cell *matHeaderCellDef> Autoren </th>
-        <td mat-cell *matCellDef="let element">
-          <div *ngFor="let author of element.authors">
-            {{author.firstName}} {{author.lastName}}
-          </div>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="genres">
-        <th mat-header-cell *matHeaderCellDef> Genres </th>
-        <td mat-cell *matCellDef="let element">
-          <div *ngFor="let genre of element.genres">
-            {{genre.name}}
-          </div>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="publication">
-        <th mat-header-cell *matHeaderCellDef> Veröffentlichung </th>
-        <td mat-cell *matCellDef="let element"> {{element.publication}} </td>
-      </ng-container>
-      <ng-container matColumnDef="publisher">
-        <th mat-header-cell *matHeaderCellDef> Herausgeber </th>
-        <td mat-cell *matCellDef="let element"> {{element.publisher}} </td>
-      </ng-container>
-      <ng-container matColumnDef="copies">
-        <th mat-header-cell *matHeaderCellDef> Exemplare </th>
-        <td mat-cell *matCellDef="let element"> {{element.copies}} </td>
-      </ng-container>
-      <ng-container matColumnDef="available">
-        <th mat-header-cell *matHeaderCellDef> Verfügbarkeit </th>
-        <td mat-cell *matCellDef="let element">
-          <mat-icon aria-hidden="false" class="icon_available" *ngIf="element.remainingCopies > 0">check_circle</mat-icon>
-          <mat-icon aria-hidden="false" class="icon_unavailable" *ngIf="element.remainingCopies <= 0">cancel</mat-icon>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="add">
-        <th mat-header-cell *matHeaderCellDef> Leihen </th>
-        <td mat-cell *matCellDef="let element"> + </td>
-      </ng-container>
+        <ng-container matColumnDef="isbn">
+          <th mat-header-cell *matHeaderCellDef> ISBN </th>
+          <td mat-cell *matCellDef="let element"> {{element.isbn}} </td>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Titel </th>
+          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+        <ng-container matColumnDef="authors">
+          <th mat-header-cell *matHeaderCellDef> Autoren </th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngFor="let author of element.authors">
+              {{author.firstName}} {{author.lastName}}
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="genres">
+          <th mat-header-cell *matHeaderCellDef> Genres </th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngFor="let genre of element.genres">
+              {{genre.name}}
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="publication">
+          <th mat-header-cell *matHeaderCellDef> Veröffentlichung </th>
+          <td mat-cell *matCellDef="let element"> {{element.publication}} </td>
+        </ng-container>
+        <ng-container matColumnDef="publisher">
+          <th mat-header-cell *matHeaderCellDef> Herausgeber </th>
+          <td mat-cell *matCellDef="let element"> {{element.publisher}} </td>
+        </ng-container>
+        <ng-container matColumnDef="copies">
+          <th mat-header-cell *matHeaderCellDef> Exemplare </th>
+          <td mat-cell *matCellDef="let element"> {{element.copies}} </td>
+        </ng-container>
+        <ng-container matColumnDef="available">
+          <th mat-header-cell *matHeaderCellDef> Verfügbarkeit </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon aria-hidden="false" class="icon_available" *ngIf="element.remainingCopies > 0">check_circle</mat-icon>
+            <mat-icon aria-hidden="false" class="icon_unavailable" *ngIf="element.remainingCopies <= 0">cancel</mat-icon>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="add">
+          <th mat-header-cell *matHeaderCellDef> Leihen </th>
+          <td mat-cell *matCellDef="let element"> + </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    </table>
+      </table>
+    </div>
 
   </div>
   <div class="receiveLoan">
     <p>
-      <button type="button">Ausgewählte Elemente leihen</button>
+      <button type="button" class="button-loan">Ausgewählte Elemente leihen</button>
     </p>
   </div>
 

@@ -1,6 +1,7 @@
 package com.example.libraryBE.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -33,8 +34,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public void addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
+    public void addProduct(@RequestBody Product product,
+                           @RequestParam(required = false) Long[] addGenreIds,
+                           @RequestParam(required = false) String[] addGenreNames,
+                           @RequestParam(required = false) Long[] addAuthorIds,
+                           @RequestParam(required = false) String[] addAuthorFirstNames,
+                           @RequestParam(required = false) String[] addAuthorLastNames,
+                           @RequestParam(required = false)
+                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate[] addAuthorBirths
+                           ) {
+        productService.addProduct(product, addGenreIds, addGenreNames, addAuthorIds, addAuthorFirstNames, addAuthorLastNames, addAuthorBirths);
     }
 
     @DeleteMapping(path="{productId}")

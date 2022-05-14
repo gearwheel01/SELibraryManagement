@@ -29,7 +29,7 @@ export class ProductListComponent implements OnInit {
 
   public openAddProductView(): void {
     this.dialog.open(AddProductComponent, {
-      height: '50%',
+      height: '80%',
       width: '50%',
     }).afterClosed().subscribe(() => {
         this.getProducts();
@@ -58,18 +58,6 @@ export class ProductListComponent implements OnInit {
       }
      );
   }
-
-    public addProduct(p: Product): void {
-      this.productService.addProduct(p).subscribe(
-        (response: any) => {
-          this.getProducts();
-          console.log(`${response} added product`);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-       );
-    }
 
     public deleteProduct(productIsbn: string): void {
       this.productService.deleteProduct(productIsbn).subscribe(

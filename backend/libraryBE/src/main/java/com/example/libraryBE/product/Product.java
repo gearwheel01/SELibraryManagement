@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.LinkedList;
 
 @Entity
 @Table
@@ -124,6 +125,9 @@ public class Product {
     }
 
     public void addGenre(Genre genre) {
+        if (this.genres == null) {
+            this.genres = new LinkedList<>();
+        }
         this.genres.add(genre);
     }
 
@@ -140,6 +144,9 @@ public class Product {
     }
 
     public void addAuthor(Author author) {
+        if (this.authors == null) {
+            this.authors = new LinkedList<>();
+        }
         this.authors.add(author);
     }
 

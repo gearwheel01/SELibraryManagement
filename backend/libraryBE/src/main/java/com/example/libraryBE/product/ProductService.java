@@ -48,11 +48,36 @@ public class ProductService {
         return productModels;
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(Product product,
+                           Long[] addGenreIds, String[] addGenreNames,
+                           Long[] addAuthorIds, String[] addAuthorFirstNames, String[] addAuthorLastNames, LocalDate[] addAuthorBirths) {
         Optional<Product> productOptional = productRepository.findById(product.getIsbn());
         if (productOptional.isPresent()) {
             throw new IllegalStateException("product with this isbn already exists");
         }
+
+        if ( (addGenreIds != null) && (addGenreIds.length > 0) ) {
+            addGenreIdsToProduct(product, addGenreIds);
+        }
+        if ( (addGenreNames != null) && (addGenreNames.length > 0) ) {
+            for (String name: addGenreNames) {
+                Genre newGenre = new Genre(name, null);
+                product.addGenre(newGenre);
+            }
+        }
+
+        if ( (addAuthorIds != null) && (addAuthorIds.length > 0) ) {
+            addAuthorIdsToProduct(product, addAuthorIds);
+        }
+        if ( (addAuthorFirstNames != null) && (addAuthorFirstNames.length > 0) ) {
+            for (int i = 0; i < addAuthorFirstNames.length; i += 1) {
+                Author newAuthor = new Author(addAuthorFirstNames[i],
+                                                addAuthorLastNames[i],
+                                                addAuthorBirths[i],null);
+                product.addAuthor(newAuthor);
+            }
+        }
+
         productRepository.save(product);
     }
 
@@ -83,13 +108,7 @@ public class ProductService {
         }
 
         if ( (addGenre != null) && (addGenre.length > 0) ) {
-            for (Long genreId : addGenre) {
-                Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new IllegalStateException("added genre does not exist"));
-                if (product.getGenres().contains(genre)) {
-                    throw new IllegalStateException("added genre aready assigned");
-                }
-                product.addGenre(genre);
-            }
+            addGenreIdsToProduct(product, addGenre);
         }
 
         if ( (removeGenre != null) && (removeGenre.length > 0) ) {
@@ -103,13 +122,7 @@ public class ProductService {
         }
 
         if ( (addAuthor != null) && (addAuthor.length > 0) ) {
-            for (Long authorId : addAuthor) {
-                Author author = authorRepository.findById(authorId).orElseThrow(() -> new IllegalStateException("added author does not exist"));
-                if (product.getAuthors().contains(author)) {
-                    throw new IllegalStateException("added author aready assigned");
-                }
-                product.addAuthor(author);
-            }
+            addAuthorIdsToProduct(product, addAuthor);
         }
 
         if ( (removeAuthor != null) && (removeAuthor.length > 0) ) {
@@ -120,6 +133,26 @@ public class ProductService {
                 }
                 product.removeAuthor(author);
             }
+        }
+    }
+
+    public void addGenreIdsToProduct(Product p, Long[] gIds) {
+        for (Long genreId : gIds) {
+            Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new IllegalStateException("added genre does not exist"));
+            if ( (p.getGenres() != null) && (p.getGenres().contains(genre)) ) {
+                throw new IllegalStateException("added genre aready assigned");
+            }
+            p.addGenre(genre);
+        }
+    }
+
+    public void addAuthorIdsToProduct(Product p, Long[] aIds) {
+        for (Long authorId : aIds) {
+            Author author = authorRepository.findById(authorId).orElseThrow(() -> new IllegalStateException("added author does not exist"));
+            if ( (p.getAuthors() != null) && (p.getAuthors().contains(author)) ) {
+                throw new IllegalStateException("added author aready assigned");
+            }
+            p.addAuthor(author);
         }
     }
 
