@@ -22,12 +22,6 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
-    @GetMapping(path = "{costumerId}")
-    public Customer getCustomer(@PathVariable("costumerId") Long costumerId) {
-        System.out.println("soup: " + costumerId);
-        return customerService.getCustomer(costumerId);
-    }
-
     @PostMapping
     public void addCustomer(@RequestBody Customer customer) {
         customerService.addCustomer(customer);

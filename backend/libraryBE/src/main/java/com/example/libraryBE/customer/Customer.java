@@ -39,6 +39,19 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    public Customer(long id, String firstName, String lastName, float fines) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fines = fines;
+    }
+
     public Customer(long id, Collection<Loan> loans, String firstName, String lastName, String email, LocalDate birth, float fines) {
         this.id = id;
         this.loans = loans;

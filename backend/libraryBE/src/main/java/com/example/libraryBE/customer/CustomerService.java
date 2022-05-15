@@ -23,8 +23,7 @@ public class CustomerService {
     }
 
     public void addCustomer(Customer customer) {
-        Optional<Customer> customerOptional = customerRepository.findCustomerByEmail(customer.getEmail());
-        if (customerOptional.isPresent()) {
+        if (customerRepository.customerByEmailExists(customer.getEmail())) {
             throw new IllegalStateException("email already taken");
         }
         customerRepository.save(customer);
@@ -58,10 +57,7 @@ public class CustomerService {
         if (fines != null) {
             customer.setFines(fines);
         }
-    }
 
-    public Customer getCustomer(Long costumerId) {
-        return customerRepository.findById(costumerId).orElseThrow(() ->
-                new IllegalStateException("requested customer does not exist"));
+        customerRepository.save(customer);
     }
 }
