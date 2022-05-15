@@ -22,20 +22,15 @@ public class AuthorController {
     }
 
     @PostMapping
-    public void addAuthor(@RequestBody Author author) {
-        authorService.addAuthor(author);
+    public void addAuthor(@RequestBody Author author,
+                          @RequestParam String firstName,
+                          @RequestParam String lastName) {
+        authorService.addAuthor(author, firstName, lastName);
     }
 
     @DeleteMapping(path="{authorId}")
     public void deleteAuthor(@PathVariable("authorId") Long authorId) {
         authorService.deleteAuthor(authorId);
-    }
-
-    @PutMapping(path="{authorId}")
-    public void updateAuthor(@PathVariable("authorId") Long authorId,
-                               @RequestParam(required = false) String firstName,
-                               @RequestParam(required = false) String lastName) {
-        authorService.updateAuthor(authorId, firstName, lastName);
     }
 
 }

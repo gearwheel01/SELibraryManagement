@@ -18,7 +18,10 @@ export class CustomerService {
   }
 
   addCustomer(customer: Customer): Observable<Customer> {
-    return this.http.post<Customer>(`${this.apiServerUrl}/customer`, customer);
+    let p = new HttpParams();
+    p = p.append("firstName", customer.firstName);
+    p = p.append("lastName", customer.lastName);
+    return this.http.post<Customer>(`${this.apiServerUrl}/customer`, customer, {params: p});
   }
 
   updateCustomer(customer: Customer): Observable<Customer> {

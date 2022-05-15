@@ -23,8 +23,10 @@ public class CustomerController {
     }
 
     @PostMapping
-    public void addCustomer(@RequestBody Customer customer) {
-        customerService.addCustomer(customer);
+    public void addCustomer(@RequestBody Customer customer,
+                            @RequestParam String firstName,
+                            @RequestParam String lastName) {
+        customerService.addCustomer(customer, firstName, lastName);
     }
 
     @DeleteMapping(path="{customerId}")
@@ -38,7 +40,7 @@ public class CustomerController {
                                @RequestParam(required = false) String lastName,
                                @RequestParam(required = false) String email,
                                @RequestParam(required = false) Float fines) {
-        customerService.updateCustomer(customerId, firstName, lastName, email, fines);
+        customerService.updateCustomer(customerId, email, fines);
     }
 
 }

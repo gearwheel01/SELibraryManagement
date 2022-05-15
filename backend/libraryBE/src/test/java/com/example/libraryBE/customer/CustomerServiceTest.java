@@ -40,8 +40,8 @@ class CustomerServiceTest {
 
     @Test
     void addCustomer() {
-        Customer customer = new Customer("Vorname", "Nachname", "mail@domain.com");
-        customerServiceTest.addCustomer(customer);
+        Customer customer = new Customer("", "", "mail@domain.com");
+        customerServiceTest.addCustomer(customer, "Vorname", "Nachname");
 
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepository).save(customerArgumentCaptor.capture());
@@ -53,11 +53,11 @@ class CustomerServiceTest {
     @Test
     void addCustomerThrowWhenDuplicateEmail() {
         String email = "mail@domain.com";
-        Customer customer = new Customer("Vorname", "Nachname", email);
+        Customer customer = new Customer("", "", email);
 
         given(customerRepository.customerByEmailExists(email)).willReturn(true);
 
-        assertThatThrownBy(() -> customerServiceTest.addCustomer(customer))
+        assertThatThrownBy(() -> customerServiceTest.addCustomer(customer, "Vorname", "Nachname"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("email already taken");
 
@@ -89,19 +89,15 @@ class CustomerServiceTest {
         Customer customer = new Customer(1, "Vorname", "Nachname", 0f);
         doReturn(Optional.of(customer)).when(customerRepository).findById(customer.getId());
 
-        String newFirstName = "neuVorname";
-        String newLastName = "neuNachname";
         String newEmail = "neumail@domain.com";
         float newFines = customer.getFines() + 10;
 
-        customerServiceTest.updateCustomer(customer.getId(), newFirstName, newLastName, newEmail, newFines);
+        customerServiceTest.updateCustomer(customer.getId(), newEmail, newFines);
 
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepository).save(customerArgumentCaptor.capture());
 
         Customer captured = customerArgumentCaptor.getValue();
-        assertThat(captured.getFirstName()).isEqualTo(newFirstName);
-        assertThat(captured.getLastName()).isEqualTo(newLastName);
         assertThat(captured.getEmail()).isEqualTo(newEmail);
         assertThat(captured.getFines()).isEqualTo(newFines);
     }
@@ -110,12 +106,10 @@ class CustomerServiceTest {
     void updateCustomerFailsWhenDoesntExist() {
         Customer customer = new Customer(1, "Vorname", "Nachname", 0f);
 
-        String newFirstName = "neuVorname";
-        String newLastName = "neuNachname";
         String newEmail = "neumail@domain.com";
         float newFines = customer.getFines() + 10;
 
-        assertThatThrownBy(() -> customerServiceTest.updateCustomer(customer.getId(), newFirstName, newLastName, newEmail, newFines))
+        assertThatThrownBy(() -> customerServiceTest.updateCustomer(customer.getId(), newEmail, newFines))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("customer does not exist");
 

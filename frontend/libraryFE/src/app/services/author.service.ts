@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Author } from '../dataModels/author'
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -18,7 +18,10 @@ export class AuthorService {
   }
 
   addAuthors(author: Author): Observable<Author> {
-    return this.http.post<Author>(`${this.apiServerUrl}/author`, author);
+    let p = new HttpParams();
+    p = p.append("firstName", author.firstName);
+    p = p.append("lastName", author.lastName);
+    return this.http.post<Author>(`${this.apiServerUrl}/author`, author, {params: p});
   }
 
   updateAuthors(author: Author): Observable<Author> {

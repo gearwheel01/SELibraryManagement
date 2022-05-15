@@ -1,5 +1,6 @@
 package com.example.libraryBE.customer;
 
+import com.example.libraryBE.Name;
 import com.example.libraryBE.loan.Loan;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,8 +30,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private Collection<Loan> loans;
 
-    private String firstName;
-    private String lastName;
+    @Embedded
+    private Name name;
+
     private String email;
     private LocalDate birth;
     private float fines;
@@ -40,23 +42,20 @@ public class Customer {
     }
 
     public Customer(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.email = email;
     }
 
     public Customer(long id, String firstName, String lastName, float fines) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.fines = fines;
     }
 
     public Customer(long id, Collection<Loan> loans, String firstName, String lastName, String email, LocalDate birth, float fines) {
         this.id = id;
         this.loans = loans;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.email = email;
         this.birth = birth;
         this.fines = fines;
@@ -64,8 +63,7 @@ public class Customer {
 
     public Customer(Collection<Loan> loans, String firstName, String lastName, String email, LocalDate birth, float fines) {
         this.loans = loans;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.email = email;
         this.birth = birth;
         this.fines = fines;
@@ -80,19 +78,14 @@ public class Customer {
     }
 
     public String getFirstName() {
-        return firstName;
+        return name.getFirstName();
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String firstName, String lastName) {
+        this.name = new Name(firstName, lastName);
     }
 
     public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+        return name.getLastName();
     }
 
     public String getEmail() {
@@ -131,8 +124,8 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", firstName='" + name.getFirstName() + '\'' +
+                ", lastName='" + name.getLastName() + '\'' +
                 ", email='" + email + '\'' +
                 ", birth=" + birth +
                 ", fines=" + fines +

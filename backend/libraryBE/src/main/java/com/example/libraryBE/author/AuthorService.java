@@ -21,7 +21,8 @@ public class AuthorService {
         return authorRepository.findAll();
     }
 
-    public void addAuthor(Author author) {
+    public void addAuthor(Author author, String firstName, String lastName) {
+        author.setName(firstName, lastName);
         authorRepository.save(author);
     }
 
@@ -31,17 +32,5 @@ public class AuthorService {
             throw new IllegalStateException("author does not exist");
         }
         authorRepository.deleteById(authorId);
-    }
-
-    @Transactional
-    public void updateAuthor(Long authorId, String firstName, String lastName) {
-        Author author = authorRepository.findById(authorId).orElseThrow(() -> new IllegalStateException("author does not exist"));
-
-        if ( (firstName != null) && (firstName.length() > 0) ) {
-            author.setFirstName(firstName);
-        }
-        if ( (lastName != null) && (lastName.length() > 0) ) {
-            author.setLastName(lastName);
-        }
     }
 }

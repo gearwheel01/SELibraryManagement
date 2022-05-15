@@ -22,10 +22,11 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer, String firstName, String lastName) {
         if (customerRepository.customerByEmailExists(customer.getEmail())) {
             throw new IllegalStateException("email already taken");
         }
+        customer.setName(firstName, lastName);
         customerRepository.save(customer);
     }
 
@@ -38,15 +39,9 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updateCustomer(Long customerId, String firstName, String lastName, String email, Float fines) {
+    public void updateCustomer(Long customerId, String email, Float fines) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new IllegalStateException("customer does not exist"));
 
-        if ( (firstName != null) && (firstName.length() > 0) ) {
-            customer.setFirstName(firstName);
-        }
-        if ( (lastName != null) && (lastName.length() > 0) ) {
-            customer.setLastName(lastName);
-        }
         if ( (email != null) && (email.length() > 0) ) {
             Optional<Customer> customerOptional = customerRepository.findCustomerByEmail(email);
             if (customerOptional.isPresent()) {

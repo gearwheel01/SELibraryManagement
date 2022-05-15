@@ -1,5 +1,6 @@
 package com.example.libraryBE.author;
 
+import com.example.libraryBE.Name;
 import com.example.libraryBE.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,8 +24,8 @@ public class Author {
     )
     private long id;
 
-    private String firstName;
-    private String lastName;
+    @Embedded
+    private Name name;
     private LocalDate birth;
 
     @JsonIgnore
@@ -35,16 +36,14 @@ public class Author {
     }
 
     public Author(String firstName, String lastName, LocalDate birth, Collection<Product> products) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.birth = birth;
         this.products = products;
     }
 
     public Author(long id, String firstName, String lastName, LocalDate birth, Collection<Product> products) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = new Name(firstName, lastName);
         this.birth = birth;
         this.products = products;
     }
@@ -57,20 +56,16 @@ public class Author {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setName(String firstName, String lastName) {
+        this.name = new Name(firstName, lastName);
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFirstName() {
+        return name.getFirstName();
     }
 
     public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+        return name.getLastName();
     }
 
     public LocalDate getBirth() {
@@ -93,8 +88,8 @@ public class Author {
     public String toString() {
         return "Author{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", firstName='" + name.getFirstName() + '\'' +
+                ", lastName='" + name.getLastName() + '\'' +
                 ", birth=" + birth +
                 '}';
     }
