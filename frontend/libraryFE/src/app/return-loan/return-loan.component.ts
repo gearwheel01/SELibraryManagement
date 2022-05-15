@@ -25,7 +25,7 @@ export class ReturnLoanComponent implements OnInit {
   public loans: Loan[] = [];
   public loanSpecs: LoanSpecs[] = [];
   customerForm: FormGroup;
-  selectedProducts: Product[];
+  selectedProducts: Product[] = [];
   filteredOptionsCustomer: Customer[];
 
   public newFines: number = 0;
@@ -47,6 +47,8 @@ export class ReturnLoanComponent implements OnInit {
     if (data["selectedProducts"] != null) {
       this.selectedProducts = data["selectedProducts"];
     }
+
+    this.selectedProducts.forEach(p => {this.getLoans(p.isbn)});
   }
 
   ngOnInit(): void {
