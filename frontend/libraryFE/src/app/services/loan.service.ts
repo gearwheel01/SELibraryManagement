@@ -29,11 +29,12 @@ export class LoanService {
     return this.http.post<Loan>(`${this.apiServerUrl}/loan`, {received: loan.received}, {params: p});
   }
 
-  updateLoan(loan: Loan): Observable<Loan> {
+  updateLoans(loanIds: number[], returned: Date): Observable<Loan> {
     let p = new HttpParams();
-    p = p.append("returned", loan.returned!.toISOString().substring(0, 10));
+    p = p.append("loanIds", loanIds.join(", "));
+    p = p.append("returned", returned.toISOString().substring(0, 10));
     console.log(p);
-    return this.http.put<Loan>(`${this.apiServerUrl}/loan/${loan.id}`, {}, {params: p});
+    return this.http.put<Loan>(`${this.apiServerUrl}/loan`, {}, {params: p});
   }
 
   deleteLoan(loanId: number): Observable<void> {

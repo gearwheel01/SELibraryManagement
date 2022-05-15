@@ -1,5 +1,7 @@
 package com.example.libraryBE.loan;
 
+import com.example.libraryBE.LoanSpecs.LoanSpecs;
+import com.example.libraryBE.LoanSpecs.LoanSpecsRepository;
 import com.example.libraryBE.customer.Customer;
 import com.example.libraryBE.customer.CustomerRepository;
 import com.example.libraryBE.product.Product;
@@ -16,22 +18,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Service
 public class LoanService {
 
     private final LoanRepository loanRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final LoanSpecsRepository loanSpecsRepository;
     private final ProductService productService;
+
+    private final String LOAN_SPECS_STD_NAME = "standard";
 
     @Autowired
     public LoanService(LoanRepository loanRepository,
                        CustomerRepository customerRepository,
                        ProductRepository productRepository,
+                       LoanSpecsRepository loanSpecsRepository,
                        ProductService productService) {
         this.loanRepository = loanRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
+        this.loanSpecsRepository = loanSpecsRepository;
         this.productService = productService;
     }
 
@@ -89,11 +98,25 @@ public class LoanService {
     }
 
     @Transactional
-    public void updateLoan(Long loanId, LocalDate returned) {
+    public void setLoansReceived(Long loanIds[], LocalDate returned) {
+        LoanSpecs specs = loanSpecsRepository.findLoanSpecsByName(LOAN_SPECS_STD_NAME).orElseThrow(() -> new IllegalStateException("no loan specs available"));
+        for (Long loanId: loanIds) {
+            setLoanReceived(loanId, returned, specs);
+        }
+    }
+
+    public void setLoanReceived(Long loanId, LocalDate returned, LoanSpecs specs) {
         Loan loan = loanRepository.findById(loanId).orElseThrow(() -> new IllegalStateException("loan does not exist"));
 
         if (returned != null) {
             loan.setReturned(returned);
+            long daysInterval = DAYS.between(loan.getReceived(), loan.getReturned());
+            if (daysInterval > specs.getLoanPeriodDays()) {
+                float newFineValue = loan.getCustomer().getFines() + specs.getFineAmount();
+                System.out.println("update fines: " + loan.getCustomer().getFines() + " to " + newFineValue);
+                loan.getCustomer().setFines(newFineValue);
+                customerRepository.save(loan.getCustomer());
+            }
         }
     }
 

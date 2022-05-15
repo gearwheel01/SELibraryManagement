@@ -49,11 +49,11 @@ public class LoanController {
         loanService.deleteLoan(loanId);
     }
 
-    @PutMapping(path="{loanId}")
-    public void updateLoan(@PathVariable("loanId") Long loanId,
-                           @RequestParam(required = false)
+    @PutMapping()
+    public void setLoansReceived(@RequestParam Long loanIds[],
+                           @RequestParam
                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate returned) {
-        loanService.updateLoan(loanId, returned);
+        loanService.setLoansReceived(loanIds, returned);
     }
 
 }
