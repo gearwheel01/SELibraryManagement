@@ -43,9 +43,10 @@ export class ReturnLoanComponent implements OnInit {
 
     this.getLoanSpecs();
     this.getCustomers();
-    this.selectedProducts = data["selectedProducts"];
 
-    this.selectedProducts.forEach(p => {this.getLoans(p.isbn);});
+    if (data["selectedProducts"] != null) {
+      this.selectedProducts = data["selectedProducts"];
+    }
   }
 
   ngOnInit(): void {
