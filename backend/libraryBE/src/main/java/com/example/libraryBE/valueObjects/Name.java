@@ -1,4 +1,4 @@
-package com.example.libraryBE;
+package com.example.libraryBE.valueObjects;
 
 import javax.persistence.Embeddable;
 

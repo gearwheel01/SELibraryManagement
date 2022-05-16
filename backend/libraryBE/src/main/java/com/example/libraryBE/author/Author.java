@@ -1,6 +1,6 @@
 package com.example.libraryBE.author;
 
-import com.example.libraryBE.Name;
+import com.example.libraryBE.valueObjects.Name;
 import com.example.libraryBE.product.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +26,7 @@ public class Author {
 
     @Embedded
     private Name name;
+
     private LocalDate birth;
 
     @JsonIgnore
@@ -33,6 +34,10 @@ public class Author {
     private Collection<Product> products;
 
     public Author() {
+    }
+
+    public Author(String firstName, String lastName) {
+        this.name = new Name(firstName, lastName);
     }
 
     public Author(String firstName, String lastName, LocalDate birth, Collection<Product> products) {
