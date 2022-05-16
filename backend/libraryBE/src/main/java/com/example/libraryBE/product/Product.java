@@ -47,6 +47,12 @@ public class Product {
     public Product() {
     }
 
+    public Product(String isbn, String title, int copies) {
+        this.isbn = isbn;
+        this.title = title;
+        this.copies = copies;
+    }
+
     public Product(String isbn, Collection<Loan> loans, Collection<Genre> genres, Collection<Author> authors, String title, LocalDate publication, String publisher, int copies) {
         this.isbn = isbn;
         this.loans = loans;

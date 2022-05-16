@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -20,21 +21,21 @@ public class LoanController {
     }
 
     @GetMapping()
-    public List<LoanModel> getLoans(@RequestParam(required = false) Long customerId,
-                                        @RequestParam(required = false) String productIsbn) {
-        return loanService.getLoans(customerId, productIsbn);
+    public List<LoanModel> getLoansForProduct(@RequestParam String productIsbn) {
+        List<Loan> loans = loanService.getLoansForProduct(productIsbn);
+        return loanListToLoanModelList(loans);
     }
 
 
     @GetMapping(path="open")
-    public List<LoanModel> getOpenLoans(@RequestParam(required = false) Long customerId,
-                               @RequestParam(required = false) String productIsbn) {
-        return loanService.getOpenLoans(customerId, productIsbn);
+    public List<LoanModel> getOpenLoansForProduct(@RequestParam(required = false) String productIsbn) {
+        List<Loan> loans = loanService.getOpenLoansForProduct(productIsbn);
+        return loanListToLoanModelList(loans);
     }
 
     @GetMapping(path="{loanId}")
     public LoanModel getLoan(@PathVariable("loanId") Long loanId) {
-        return loanService.getLoan(loanId);
+        return new LoanModel(loanService.getLoan(loanId));
     }
 
     @PostMapping
@@ -44,16 +45,17 @@ public class LoanController {
         loanService.addLoan(loan, customerId, productIsbn);
     }
 
-    @DeleteMapping(path="{loanId}")
-    public void deleteLoan(@PathVariable("loanId") Long loanId) {
-        loanService.deleteLoan(loanId);
-    }
-
     @PutMapping()
     public void setLoansReceived(@RequestParam Long loanIds[],
                            @RequestParam
                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate returned) {
         loanService.setLoansReceived(loanIds, returned);
+    }
+
+    public List<LoanModel> loanListToLoanModelList(List<Loan> loans) {
+        LinkedList<LoanModel> models = new LinkedList<>();
+        loans.forEach(l -> models.push(new LoanModel(l)));
+        return models;
     }
 
 }

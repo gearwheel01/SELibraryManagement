@@ -44,33 +44,15 @@ public class LoanService {
         this.productService = productService;
     }
 
-    public List<LoanModel> getLoans(Long customerId, String productIsbn) {
-        List<Loan> loans = loanRepository.findAll();
-        if (customerId != null) {
-            loans = loans.stream().filter(l -> l.getCustomer().getId() == customerId).collect(Collectors.toList());
-        }
-        if (productIsbn != null) {
-            loans = loans.stream().filter(l -> l.getProduct().getIsbn().equals(productIsbn)).collect(Collectors.toList());
-        }
-
-        LinkedList<LoanModel> loanModels = new LinkedList<>();
-        loans.forEach(l -> loanModels.add(new LoanModel(l)));
-        return loanModels;
+    public List<Loan> getLoansForProduct(String productIsbn) {
+        List<Loan> loans = loanRepository.getLoansForProduct(productIsbn);
+        //loans = loans.stream().filter(l -> l.getProduct().getIsbn().equals(productIsbn)).collect(Collectors.toList());
+        return loans;
     }
 
-    public List<LoanModel> getOpenLoans(Long customerId, String productIsbn) {
-        List<Loan> loans = loanRepository.findAll();
-        loans = loans.stream().filter(l -> l.getReturned() == null).collect(Collectors.toList());
-        if (customerId != null) {
-            loans = loans.stream().filter(l -> l.getCustomer().getId() == customerId).collect(Collectors.toList());
-        }
-        if (productIsbn != null) {
-            loans = loans.stream().filter(l -> l.getProduct().getIsbn().equals(productIsbn)).collect(Collectors.toList());
-        }
-
-        LinkedList<LoanModel> loanModels = new LinkedList<>();
-        loans.forEach(l -> loanModels.add(new LoanModel(l)));
-        return loanModels;
+    public List<Loan> getOpenLoansForProduct(String productIsbn) {
+        List<Loan> loans = loanRepository.getOpenLoansForProduct(productIsbn);
+        return loans;
     }
 
     public void addLoan(Loan loan, Long customerId, String productIsbn) {
@@ -87,14 +69,6 @@ public class LoanService {
         loan.setProduct(product);
 
         loanRepository.save(loan);
-    }
-
-    public void deleteLoan(Long loanId) {
-        boolean exists = loanRepository.existsById(loanId);
-        if (!exists) {
-            throw new IllegalStateException("loan does not exist");
-        }
-        loanRepository.deleteById(loanId);
     }
 
     @Transactional
@@ -120,10 +94,10 @@ public class LoanService {
         }
     }
 
-    public LoanModel getLoan(Long loanId) {
+    public Loan getLoan(Long loanId) {
         Loan loan =  loanRepository.findById(loanId).orElseThrow(() ->
                 new IllegalStateException("requested loan does not exist"));
-        return new LoanModel(loan);
+        return loan;
     }
 
 }

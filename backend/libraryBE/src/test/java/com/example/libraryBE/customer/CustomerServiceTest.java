@@ -40,7 +40,7 @@ class CustomerServiceTest {
 
     @Test
     void addCustomer() {
-        Customer customer = new Customer("", "", "mail@domain.com");
+        Customer customer = new Customer("Vorname", "Nachname", "mail@domain.com");
         customerServiceTest.addCustomer(customer, "Vorname", "Nachname");
 
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);

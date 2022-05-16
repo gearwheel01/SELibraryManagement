@@ -1,10 +1,8 @@
 package com.example.libraryBE.customer;
 
-import com.example.libraryBE.Name;
+import com.example.libraryBE.valueObjects.Name;
 import com.example.libraryBE.loan.Loan;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
 import java.time.LocalDate;
