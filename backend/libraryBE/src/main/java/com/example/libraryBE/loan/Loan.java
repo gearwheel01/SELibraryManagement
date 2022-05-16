@@ -38,6 +38,8 @@ public class Loan {
     public Loan() {
     }
 
+
+
     public Loan(Long id, Customer customer, Product product, LocalDate received, LocalDate returned) {
         this.id = id;
         this.customer = customer;

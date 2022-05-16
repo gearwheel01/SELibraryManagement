@@ -12,11 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -72,14 +68,14 @@ public class LoanService {
     }
 
     @Transactional
-    public void setLoansReceived(Long loanIds[], LocalDate returned) {
+    public void setLoansReturned(Long loanIds[], LocalDate returned) {
         LoanSpecs specs = loanSpecsRepository.findLoanSpecsByName(LOAN_SPECS_STD_NAME).orElseThrow(() -> new IllegalStateException("no loan specs available"));
         for (Long loanId: loanIds) {
-            setLoanReceived(loanId, returned, specs);
+            setLoanReturned(loanId, returned, specs);
         }
     }
 
-    public void setLoanReceived(Long loanId, LocalDate returned, LoanSpecs specs) {
+    public void setLoanReturned(Long loanId, LocalDate returned, LoanSpecs specs) {
         Loan loan = loanRepository.findById(loanId).orElseThrow(() -> new IllegalStateException("loan does not exist"));
 
         if (returned != null) {
@@ -91,6 +87,7 @@ public class LoanService {
                 loan.getCustomer().setFines(newFineValue);
                 customerRepository.save(loan.getCustomer());
             }
+            loanRepository.save(loan);
         }
     }
 

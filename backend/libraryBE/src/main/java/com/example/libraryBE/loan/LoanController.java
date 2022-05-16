@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class LoanController {
     public void setLoansReceived(@RequestParam Long loanIds[],
                            @RequestParam
                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate returned) {
-        loanService.setLoansReceived(loanIds, returned);
+        loanService.setLoansReturned(loanIds, returned);
     }
 
     public List<LoanModel> loanListToLoanModelList(List<Loan> loans) {
